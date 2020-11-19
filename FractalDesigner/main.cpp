@@ -1,43 +1,54 @@
-//  read about static build !!!!!!!!!!!!!!!
-
+#include"mainwindow.h"
 
 #include<QApplication>
-#include"mainwindow.h"
-//#include<QPushButton>
-//#include<QSlider>
-//#include<QSpinBox>
-//#include<QVBoxLayout>
+#include <QtGui>
+#include <QMenu>
+#include <QMenuBar>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     MainWindow* window = new MainWindow();
+
+    QMenu*   pmnu   = new QMenu("&Menu");
+
+    pmnu->addAction("&About Qt",
+                    &app,
+                    SLOT(aboutQt()),
+                    Qt::CTRL + Qt::Key_Q
+                   );
+
+    pmnu->addSeparator();
+
+    QAction* pCheckableAction = pmnu->addAction("&CheckableItem");
+    pCheckableAction->setCheckable(true);
+    pCheckableAction->setChecked(true);
+
+    QMenu* pmnuSubMenu = new QMenu("&SubMenu", pmnu);
+    pmnu->addMenu(pmnuSubMenu);
+    pmnuSubMenu->addAction("&Test");
+
+    QAction* pDisabledAction = pmnu->addAction("&DisabledItem");
+    pDisabledAction->setEnabled(false);
+
+    pmnu->addSeparator();
+
+    pmnu->addAction("&Exit", &app, SLOT(quit()));
+
+    QMenu*   fileMenu   = new QMenu("&File");
+    fileMenu->addAction("&Save",
+                              &app,
+                              SLOT(aboutQt()), // not implemented
+                              Qt::CTRL + Qt::Key_S
+                             );
+
+    QMenu*   chooseMenu   = new QMenu("&Tools");
+
+    window->menuBar()->addMenu(fileMenu);
+    window->menuBar()->addMenu(chooseMenu);
+    window->menuBar()->addMenu(pmnu);
+
     window->show();
-
-
-    /*QPushButton* btn = new QPushButton("Bye!");
-    btn->show();
-
-    QSlider* sl = new QSlider(Qt::Horizontal);
-    sl->setMaximum(100);
-
-    QWidget* window = new QWidget;
-    QVBoxLayout* layout = new QVBoxLayout;
-
-    QSpinBox* sb = new QSpinBox;
-    sb->setMaximum(100);
-
-    layout->addWidget(sl);
-    layout->addWidget(btn);
-    layout->addWidget(sb);
-
-    window->setLayout(layout);
-
-    window->show();
-
-    QObject::connect(btn, SIGNAL(clicked()), &app, SLOT(quit()));
-    QObject::connect(sb, SIGNAL(valueChanged(int)), sl, SLOT(setValue(int)));
-    QObject::connect(sl, SIGNAL(valueChanged(int)), sb, SLOT(setValue(int)));*/
 
     return app.exec();
 }

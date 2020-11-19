@@ -8,8 +8,9 @@
 #include<QPushButton>
 #include<QHBoxLayout>
 #include<QVBoxLayout>
+#include<QMainWindow>
 
-class MainWindow : public QDialog {
+class MainWindow : public QMainWindow {
 
     Q_OBJECT
 
@@ -17,6 +18,7 @@ public:
     MainWindow(QWidget* parent = nullptr);
 
 private:
+    QWidget* main;
     QLabel* lbl;
     QLabel* pic;
     QLineEdit* line;

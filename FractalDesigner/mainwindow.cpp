@@ -1,10 +1,12 @@
 #include"mainwindow.h"
+
 #include<QMessageBox>
 #include<QImage>
 #include<QPixmap>
 #include<QColor>
 #include <complex>
 #include <cmath>
+#include <QGraphicsView>
 
 QImage PlotMandel(int colormap = 100) {
     QImage img(800, 800, QImage::Format_RGB32);
@@ -32,7 +34,9 @@ QImage PlotMandel(int colormap = 100) {
     return img;
 }
 
-MainWindow::MainWindow(QWidget* parent) : QDialog(parent) {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+    main = new QWidget;
+
     lbl = new QLabel("Enter colormap");
 
     pic = new QLabel;
@@ -40,10 +44,6 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent) {
     pic->setPixmap(QPixmap::fromImage(img));
 
     line = new QLineEdit;
-
-    //cb1 = new QCheckBox("Upper case");
-
-    //cb2 = new QCheckBox("Inverse");
 
     ok = new QPushButton("Plot");
     ok->setDefault(true);
@@ -59,19 +59,18 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent) {
 
     QVBoxLayout* right = new QVBoxLayout;
     right->addLayout(layout);
-    //right->addWidget(cb1);
-    //right->addWidget(cb2);
     right->addWidget(ok);
     right->addWidget(clear);
     right->addWidget(close);
 
 
-    QHBoxLayout* main = new QHBoxLayout;
-    main->addWidget(pic);
-    main->addLayout(right);
+    QHBoxLayout* mainLayout = new QHBoxLayout;
+    mainLayout->addWidget(pic);
+    mainLayout->addLayout(right);
 
-    setLayout(main);
-    setWindowTitle("Pipka");
+    main->setLayout(mainLayout);
+    setCentralWidget(main);
+    setWindowTitle("Fractal Designer");
 
     connect(line, SIGNAL(textChanged(QString)), this, SLOT(TextChanged(QString)));
     connect(close, SIGNAL(clicked()), this, SLOT(close()));
@@ -88,8 +87,6 @@ void MainWindow::ClearClicked() {
     img.fill(qRgb(255,255,255));
     pic->setPixmap(QPixmap::fromImage(img));
 }
-
-
 
 void MainWindow::OkClicked() {
     int num1 = line->text().toInt();
