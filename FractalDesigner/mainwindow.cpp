@@ -1,14 +1,12 @@
 #include"mainwindow.h"
-#include "plotmandel.cpp"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     main = new QWidget;
 
     lbl = new QLabel("Enter colormap");
 
-    QImage img = PlotMandel();
-
     scene = new MainScene(this);
+    QImage img = scene->PlotMandel();
     scene->addPixmap(QPixmap::fromImage(img));
 
     view = new QGraphicsView(scene);
@@ -66,7 +64,7 @@ void MainWindow::OkClicked() {
     scene->y_coord = -2;
     scene->width = 4;
     scene->colormap = num1;
-    QImage img = PlotMandel(num1);
+    QImage img = scene->PlotMandel(num1, scene->x_coord, scene->y_coord, scene->width);
     scene->addPixmap(QPixmap::fromImage(img));
 }
 
