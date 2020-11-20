@@ -1,47 +1,18 @@
 #include"mainwindow.h"
-
-#include<QMessageBox>
-#include<QImage>
-#include<QPixmap>
-#include<QColor>
-#include <complex>
-#include <cmath>
-#include <QGraphicsView>
-
-QImage PlotMandel(int colormap = 100) {
-    QImage img(800, 800, QImage::Format_RGB32);
-    if (img.isNull()) {
-        exit(1);
-    }
-    img.fill(qRgb(0,0,0));
-    for (int x = 0; x < 800; ++x) {
-        for (int y = 0; y < 800; ++y) {
-            double x0 = x, y0 = y;
-            x0 = x0 / 200 - 2;
-            y0 = y0 / 200 - 2;
-            std::complex<double> c(x0, y0);
-            std::complex<double> z(0, 0);
-            for (int i = 0; i < 30; ++i) {
-                z = z * z + c;
-                if (abs(z) > 2) {
-                    img.setPixel(x, y, qRgb((i * colormap) % 255, (i * colormap * 3) % 255, (i * colormap * 5) % 255));
-                    break;
-                }
-            }
-
-        }
-    }
-    return img;
-}
+#include "plotmandel.cpp"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     main = new QWidget;
 
     lbl = new QLabel("Enter colormap");
 
-    pic = new QLabel;
     QImage img = PlotMandel();
-    pic->setPixmap(QPixmap::fromImage(img));
+
+    scene = new MainScene(this);
+    scene->addPixmap(QPixmap::fromImage(img));
+
+    view = new QGraphicsView(scene);
+    view->show();
 
     line = new QLineEdit;
 
@@ -65,7 +36,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
-    mainLayout->addWidget(pic);
+    //mainLayout->addWidget(pic);
+    mainLayout->addWidget(view);
     mainLayout->addLayout(right);
 
     main->setLayout(mainLayout);
@@ -85,11 +57,16 @@ void MainWindow::TextChanged(QString str) {
 void MainWindow::ClearClicked() {
     QImage img(800, 800, QImage::Format_RGB32);
     img.fill(qRgb(255,255,255));
-    pic->setPixmap(QPixmap::fromImage(img));
+    scene->addPixmap(QPixmap::fromImage(img));
 }
 
 void MainWindow::OkClicked() {
     int num1 = line->text().toInt();
+    scene->x_coord = -2;
+    scene->y_coord = -2;
+    scene->width = 4;
+    scene->colormap = num1;
     QImage img = PlotMandel(num1);
-    pic->setPixmap(QPixmap::fromImage(img));
+    scene->addPixmap(QPixmap::fromImage(img));
 }
+

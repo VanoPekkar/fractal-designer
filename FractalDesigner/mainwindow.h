@@ -1,6 +1,8 @@
 #ifndef MYWINDOW_H
 #define MYWINDOW_H
 
+#include "mainscene.h"
+
 #include<QDialog>
 #include<QLabel>
 #include<QLineEdit>
@@ -9,6 +11,15 @@
 #include<QHBoxLayout>
 #include<QVBoxLayout>
 #include<QMainWindow>
+#include<QMessageBox>
+#include<QImage>
+#include<QPixmap>
+#include<QColor>
+
+#include <QGraphicsView>
+
+#include <complex>
+#include <cmath>
 
 class MainWindow : public QMainWindow {
 
@@ -27,6 +38,8 @@ private:
     QPushButton* ok;
     QPushButton* close;
     QPushButton* clear;
+    QGraphicsView* view;
+    MainScene* scene;
 
 private slots:  // own slots
     void OkClicked();

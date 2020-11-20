@@ -10,9 +10,12 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainscene.cpp \
+    mainwindow.cpp \
+    plotmandel.cpp
 
 HEADERS += \
+    mainscene.h \
     mainwindow.h
 
 FORMS +=
