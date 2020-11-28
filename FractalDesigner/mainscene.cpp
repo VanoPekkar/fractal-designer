@@ -74,7 +74,6 @@ QImage MainScene::PlotMandel(int colormap,
             varsForFunc[1] = c;
             for (unsigned int i = 0; i < std::max(iter, 5u); ++i) {
                 // z = z * z + c;
-                std::complex<double> var = z * z + c;
                 varsForFunc[0] = z;
                 z = fparser->eval(varsForFunc);
                 if (abs(z) > 2) {
