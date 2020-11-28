@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include "funcenter.h"
 
 
 class MainScene : public QGraphicsScene {
@@ -20,9 +21,14 @@ public:
     long double scale;
     int x_picsize;
     int y_picsize;
+    FuncEnterLineEdit* fparser;
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
     //void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    QImage PlotMandel(int colormap = 5, long double xw0 = -2, long double yw0 = -2, long double cs = 4, unsigned int iter = 20);
+    QImage PlotMandel(int colormap = 5,
+                      long double xw0 = -2,
+                      long double yw0 = -2,
+                      long double cs = 4,
+                      unsigned int iter = 20);
 
 };
 

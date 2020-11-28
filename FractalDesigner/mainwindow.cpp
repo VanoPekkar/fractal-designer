@@ -5,22 +5,34 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     lbl = new QLabel("Enter colormap");
 
-    scene = new MainScene(this);
-    QImage img = scene->PlotMandel();
-    scene->addPixmap(QPixmap::fromImage(img));
-
-    view = new QGraphicsView(scene);
-    view->show();
-
     line = new QLineEdit;
+    line->setText("5");
 
     ok = new QPushButton("Plot");
     ok->setDefault(true);
-    ok->setEnabled(false);
+    // ok->setEnabled(false);
 
     close = new QPushButton("Close");
 
     clear = new QPushButton("Clear");
+
+    //  create function input
+    funcLabel = new QLabel("Enter function");
+    funcLineEdit = new FuncEnterLineEdit;
+    funcLineEdit->setText("z^2+c");
+    funcLineEdit->parse_func();
+    QHBoxLayout* funcEnter = new QHBoxLayout;
+    funcEnter->addWidget(funcLabel);
+    funcEnter->addWidget(funcLineEdit);
+
+    scene = new MainScene(this);
+    scene->fparser = this->funcLineEdit;
+    QImage img = scene->PlotMandel();
+    scene->addPixmap(QPixmap::fromImage(img));
+
+    view = new QGraphicsView(scene);
+    view->setDragMode(QGraphicsView::ScrollHandDrag);
+    view->show();
 
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(lbl);
@@ -28,6 +40,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     QVBoxLayout* right = new QVBoxLayout;
     right->addLayout(layout);
+    right->addLayout(funcEnter);
     right->addWidget(ok);
     right->addWidget(clear);
     right->addWidget(close);
@@ -64,6 +77,7 @@ void MainWindow::OkClicked() {
     scene->y_coord = -2;
     scene->width = 4;
     scene->colormap = num1;
+    scene->fparser->parse_func();
     QImage img = scene->PlotMandel(num1, scene->x_coord, scene->y_coord, scene->width);
     scene->addPixmap(QPixmap::fromImage(img));
 }

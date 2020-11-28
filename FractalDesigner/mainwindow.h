@@ -2,6 +2,7 @@
 #define MYWINDOW_H
 
 #include "mainscene.h"
+#include "funcenter.h"
 
 #include<QDialog>
 #include<QLabel>
@@ -40,6 +41,8 @@ private:
     QPushButton* clear;
     QGraphicsView* view;
     MainScene* scene;
+    QLabel* funcLabel;
+    FuncEnterLineEdit* funcLineEdit;
 
 private slots:  // own slots
     void OkClicked();

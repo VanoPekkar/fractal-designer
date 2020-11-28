@@ -1,4 +1,5 @@
 #include "mainscene.h"
+#include "funcenter.h"
 
 #include<QImage>
 #include<QPixmap>
@@ -53,20 +54,29 @@ void MainScene::mousePressEvent(QGraphicsSceneMouseEvent * event) {
 //}
 
 
-QImage MainScene::PlotMandel(int colormap, long double xw0, long double yw0, long double cs, unsigned int iter) {
+QImage MainScene::PlotMandel(int colormap,
+                             long double xw0,
+                             long double yw0,
+                             long double cs,
+                             unsigned int iter) {
     QImage img(x_picsize, y_picsize, QImage::Format_RGB32);
     if (img.isNull()) {
         exit(1);
     }
     img.fill(qRgb(0,0,0));
+    std::complex<double> varsForFunc[] = { 0, 0 };
     for (int x = 0; x < x_picsize; ++x) {
         for (int y = 0; y < y_picsize; ++y) {
             double x0 = x * cs / x_picsize + xw0;
             double y0 = - y * cs / y_picsize + yw0 + cs;
             std::complex<double> c(x0, y0);
             std::complex<double> z(0, 0);
+            varsForFunc[1] = c;
             for (unsigned int i = 0; i < std::max(iter, 5u); ++i) {
-                z = z * z + c;
+                // z = z * z + c;
+                std::complex<double> var = z * z + c;
+                varsForFunc[0] = z;
+                z = fparser->eval(varsForFunc);
                 if (abs(z) > 2) {
                     //img.setPixel(x, y, qRgb((i * colormap) % 255, (i * colormap * 3) % 255, (i * colormap * 5) % 255));
                     //img.setPixel(x, y, qRgb(60 * colormap * sin(arg(z)), 30 * colormap * sin(arg(z)), 40 * colormap * sin(arg(z))));
