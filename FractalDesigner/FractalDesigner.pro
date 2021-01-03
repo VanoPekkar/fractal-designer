@@ -9,20 +9,16 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Lib/fparser4.5.2/fparser.cc \
-    Lib/fparser4.5.2/fpoptimizer.cc \
-    funcenter.cpp \
+    griditem.cpp \
     main.cpp \
     mainscene.cpp \
+    mainview.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    Lib/fparser4.5.2/extrasrc/fpaux.hh \
-    Lib/fparser4.5.2/extrasrc/fptypes.hh \
-    Lib/fparser4.5.2/fparser.hh \
-    Lib/fparser4.5.2/fpconfig.hh \
-    funcenter.h \
+    griditem.h \
     mainscene.h \
+    mainview.h \
     mainwindow.h
 
 FORMS +=
@@ -31,8 +27,3 @@ FORMS +=
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-DISTFILES += \
-    Lib/fparser4.5.2/extrasrc/fp_identifier_parser.inc \
-    Lib/fparser4.5.2/extrasrc/fp_opcode_add.inc
-

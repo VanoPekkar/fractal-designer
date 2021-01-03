@@ -1,6 +1,6 @@
 #include"mainwindow.h"
 
-#include <QApplication>
+#include<QApplication>
 #include <QtGui>
 #include <QMenu>
 #include <QMenuBar>
