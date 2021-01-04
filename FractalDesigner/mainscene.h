@@ -11,6 +11,7 @@
 #include <QVector>
 
 #include "griditem.h"
+#include "funcenter.h"
 
 
 class MainScene : public QGraphicsScene {
@@ -29,6 +30,8 @@ public:
     int x_picsize;
     int y_picsize;
     int temp;
+    // Function enter line
+    FuncEnterLineEdit funcEnter;
     //GridItem testitem;
     GridItem* pixmap1;
     QImage* pic;

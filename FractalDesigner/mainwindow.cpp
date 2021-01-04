@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     main = new QWidget;
 
-    lbl = new QLabel("Enter colormap");
+    lbl = new QLabel("Enter colormap:");
 
     scene = new MainScene(this);
     //scene->PlotM();
@@ -26,8 +26,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     layout->addWidget(lbl);
     layout->addWidget(line);
 
+    lbl_funcEnter = new QLabel("Enter function:");
+    QHBoxLayout* layout_funcEnter = new QHBoxLayout;
+    layout_funcEnter->addWidget(lbl_funcEnter);
+    layout_funcEnter->addWidget(&(scene->funcEnter));
+
     QVBoxLayout* right = new QVBoxLayout;
     right->addLayout(layout);
+    right->addLayout(layout_funcEnter);
     right->addWidget(ok);
     right->addWidget(clear);
     right->addWidget(close);

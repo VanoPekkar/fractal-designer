@@ -32,6 +32,7 @@ public:
 private:
     QWidget* main;
     QLabel* lbl;
+    QLabel* lbl_funcEnter;
     QLineEdit* line;
     QCheckBox* cb1;
     QCheckBox* cb2;

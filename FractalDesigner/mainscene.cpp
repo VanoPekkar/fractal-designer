@@ -23,6 +23,7 @@ MainScene::MainScene(QObject* parent) : QGraphicsScene(parent) {
     scale = 1;
     x_picsize = 800;
     y_picsize = 800;
+    funcEnter.setText("z^2 + c");
     reset();
 //    //pic->fill(qRgb(255,0,0));
 //    pixmap2 = new GridItem(PlotMOn(800, 0, iterCount()), nullptr, 800, 0);
@@ -217,7 +218,7 @@ void MainScene::PlotMandel(int colormap, long double xw0, long double yw0, long 
             std::complex<double> c(x0, y0);
             std::complex<double> z = z_points[x][y];
             z_points[x][y] = z;
-            for (unsigned int i = 0; i < std::max(iter, 5u); ++i) {
+            for (unsigned int i = 0; i < iter; ++i) {
                 z = z * z + c;
                 if (abs(z) > 2) {
                     //img.setPixel(x, y, qRgb((i * colormap) % 255, (i * colormap * 3) % 255, (i * colormap * 5) % 255));
@@ -250,7 +251,7 @@ void MainScene::PlotM(long double xw0, long double yw0, unsigned int iter, QGrap
             std::complex<double> c(x0, y0);
             std::complex<double> z = z_points[x][y];
             z_points[x][y] = z;
-            for (unsigned int i = 0; i < std::max(iter, 5u); ++i) {
+            for (unsigned int i = 0; i < iter; ++i) {
                 z = z * z + c;
                 if (abs(z) > 2) {
                     //img.setPixel(x, y, qRgb((i * colormap) % 255, (i * colormap * 3) % 255, (i * colormap * 5) % 255));
@@ -274,12 +275,14 @@ void MainScene::PlotM(long double xw0, long double yw0, unsigned int iter, QGrap
 }
 
 QPixmap MainScene::PlotMOn(long double xw0, long double yw0, unsigned int iter) {
+    this->funcEnter.parse_func();
     QImage img(x_picsize, y_picsize, QImage::Format_RGB32);
     if (img.isNull()) {
         exit(1);
     }
     img.fill(qRgb(0,0,0));
     std::vector<std::vector<std::complex<double>>> z_points(x_picsize, std::vector<std::complex<double>>(y_picsize));
+    std::complex<double> params[2] = {0, 0};
     for (int x = 0; x < x_picsize; ++x) {
         for (int y = 0; y < y_picsize; ++y) {
             double x0 = x * width / x_picsize + xw0;
@@ -287,8 +290,11 @@ QPixmap MainScene::PlotMOn(long double xw0, long double yw0, unsigned int iter) 
             std::complex<double> c(x0, y0);
             std::complex<double> z = z_points[x][y];
             z_points[x][y] = z;
-            for (unsigned int i = 0; i < std::max(iter, 5u); ++i) {
-                z = z * z + c;
+            for (unsigned int i = 0; i < iter; ++i) {
+                //z = z * z + c;
+                params[0] = z;
+                params[1] = c;
+                z = this->funcEnter.eval(params);
                 if (abs(z) > 2) {
                     //img.setPixel(x, y, qRgb((i * colormap) % 255, (i * colormap * 3) % 255, (i * colormap * 5) % 255));
                     //img.setPixel(x, y, qRgb(60 * colormap * sin(arg(z)), 30 * colormap * sin(arg(z)), 40 * colormap * sin(arg(z))));
