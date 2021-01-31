@@ -4,6 +4,8 @@
 #include "mainscene.h"
 #include "funcenter.h"
 
+#include "savewindow.h"
+
 #include<QDialog>
 #include<QLabel>
 #include<QLineEdit>
@@ -40,14 +42,16 @@ private:
     QPushButton* close;
     QPushButton* clear;
     QGraphicsView* view;
-    MainScene* scene;
     QLabel* funcLabel;
     FuncEnterLineEdit* funcLineEdit;
+    SaveWindow* saveWindow;
+    MainScene* scene;
 
 private slots:  // own slots
     void OkClicked();
     void TextChanged(QString str);
     void ClearClicked();
+    void SaveImage();
 
 signals:  // own signals
     void UpperCase(QString str);

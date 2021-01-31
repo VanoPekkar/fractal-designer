@@ -37,10 +37,10 @@ int main(int argc, char *argv[]) {
 
     QMenu*   fileMenu   = new QMenu("&File");
     fileMenu->addAction("&Save",
-                              &app,
-                              SLOT(aboutQt()), // not implemented
-                              Qt::CTRL + Qt::Key_S
-                             );
+                        window,
+                        SLOT(SaveImage()), // not implemented
+                        Qt::CTRL + Qt::Key_S
+                       );
 
     QMenu*   chooseMenu   = new QMenu("&Tools");
 

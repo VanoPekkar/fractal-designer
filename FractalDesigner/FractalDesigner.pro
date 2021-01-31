@@ -14,7 +14,8 @@ SOURCES += \
     funcenter.cpp \
     main.cpp \
     mainscene.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    savewindow.cpp
 
 HEADERS += \
     Lib/fparser4.5.2/extrasrc/fpaux.hh \
@@ -23,7 +24,8 @@ HEADERS += \
     Lib/fparser4.5.2/fpconfig.hh \
     funcenter.h \
     mainscene.h \
-    mainwindow.h
+    mainwindow.h \
+    savewindow.h
 
 FORMS +=
 

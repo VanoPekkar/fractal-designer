@@ -3,6 +3,8 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     main = new QWidget;
 
+    saveWindow = nullptr;
+
     lbl = new QLabel("Enter colormap");
 
     line = new QLineEdit;
@@ -45,7 +47,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     right->addWidget(clear);
     right->addWidget(close);
 
-
     QHBoxLayout* mainLayout = new QHBoxLayout;
     //mainLayout->addWidget(pic);
     mainLayout->addWidget(view);
@@ -82,3 +83,8 @@ void MainWindow::OkClicked() {
     scene->addPixmap(QPixmap::fromImage(img));
 }
 
+void MainWindow::SaveImage() {
+    delete saveWindow;  // necessary?
+    saveWindow = new SaveWindow(this, scene);
+    saveWindow->show();
+}
