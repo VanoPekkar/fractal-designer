@@ -58,13 +58,15 @@ void SaveWindow::Save() {
     filename = filename + "." + convertTemp;
     const char* fmt(convertTemp.toStdString().c_str());
     image.save(filename, fmt, 100);
-    this->~SaveWindow();
+    this->Destroy();
+}
+
+void SaveWindow::closeEvent(QCloseEvent* event) {
+    QWidget::closeEvent(event);
+    Destroy();
 }
 
 void SaveWindow::Destroy() {
-    this->~SaveWindow();
-}
-
-SaveWindow::~SaveWindow() {
     _parent->setEnabled(true);
+    delete this;
 }

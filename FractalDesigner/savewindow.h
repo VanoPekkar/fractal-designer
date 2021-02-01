@@ -9,6 +9,7 @@
 #include<QLabel>
 #include<QPushButton>
 #include<QPainter>
+#include<QCloseEvent>
 
 #include"mainscene.h"
 
@@ -18,7 +19,6 @@ class SaveWindow : public QWidget {
 
 public:
     SaveWindow(QWidget* parent, MainScene* scene);
-    ~SaveWindow();
 
 private:
     QWidget* _parent;
@@ -37,6 +37,9 @@ private:
 private slots:
     void Save();
     void Destroy();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 };
 

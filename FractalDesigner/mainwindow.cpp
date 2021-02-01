@@ -84,7 +84,6 @@ void MainWindow::OkClicked() {
 }
 
 void MainWindow::SaveImage() {
-    delete saveWindow;  // necessary?
     saveWindow = new SaveWindow(this, scene);
     saveWindow->show();
 }
