@@ -12,14 +12,34 @@ std::complex<double> FuncEnterLineEdit::eval(std::complex<double>* params) {
         return result;
     }
     // TODO: think what returns here?
-    return _fparser.EvalError();
+    // throw 1;
+    throw std::runtime_error("Eval error. Last input: " +
+                             std::to_string(params[0].real()) + "+" +
+                             std::to_string(params[0].imag()) + "i" +
+                             " and " +
+                             std::to_string(params[1].real()) + "+" +
+                             std::to_string(params[1].imag()) + "i"
+                             );
+//    throw std::runtime_error("Eval error!");
 }
 
-void FuncEnterLineEdit::parse_func() {
+void FuncEnterLineEdit::parse_two_vars() {
     std::string var = text().toStdString();
     int success = _fparser.Parse(text().toStdString(), "z,c");
     if (success == -1) {
         return;
     }
     //  TODO: what here
+    throw std::runtime_error("Parse_Mandel error!");
+}
+
+
+void FuncEnterLineEdit::parse_one_var() {
+    std::string var = text().toStdString();
+    int success = _fparser.Parse(text().toStdString(), "z");
+    if (success == -1) {
+        return;
+    }
+    //  TODO: what here
+    throw std::runtime_error("Parse_Julia error!");
 }

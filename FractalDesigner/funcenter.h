@@ -12,7 +12,8 @@ class FuncEnterLineEdit : public QLineEdit {
 public:
     FuncEnterLineEdit(QWidget* parent = nullptr);
     std::complex<double> eval(std::complex<double>* params);
-    void parse_func();
+    void parse_two_vars();
+    void parse_one_var();
 
 public:
     FunctionParser_cd _fparser;

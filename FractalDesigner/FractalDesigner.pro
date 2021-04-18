@@ -12,9 +12,12 @@ SOURCES += \
     Lib/fparser4.5.2/fparser.cc \
     Lib/fparser4.5.2/fpoptimizer.cc \
     funcenter.cpp \
+    griditem.cpp \
     main.cpp \
     mainscene.cpp \
-    mainwindow.cpp
+    mainview.cpp \
+    mainwindow.cpp \
+    renderthread.cpp
 
 HEADERS += \
     Lib/fparser4.5.2/extrasrc/fpaux.hh \
@@ -22,10 +25,25 @@ HEADERS += \
     Lib/fparser4.5.2/fparser.hh \
     Lib/fparser4.5.2/fpconfig.hh \
     funcenter.h \
+    griditem.h \
     mainscene.h \
-    mainwindow.h
+    mainview.h \
+    mainwindow.h \
+    renderthread.h
 
 FORMS +=
+
+#QMAKE_EXTRA_TARGETS += before_build makefilehook
+
+#makefilehook.target = $(MAKEFILE)
+#makefilehook.depends = .beforebuild
+
+#PRE_TARGETDEPS += .beforebuild
+
+
+#before_build.target = .beforebuild
+#before_build.depends = FORCE
+#before_build.commands = chcp 1251
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -35,4 +53,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     Lib/fparser4.5.2/extrasrc/fp_identifier_parser.inc \
     Lib/fparser4.5.2/extrasrc/fp_opcode_add.inc
-

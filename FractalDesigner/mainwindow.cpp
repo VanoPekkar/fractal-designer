@@ -1,55 +1,59 @@
 #include"mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     main = new QWidget;
 
-    lbl = new QLabel("Enter colormap");
+    lbl = new QLabel("Enter colormap:");
+
+    scene = new MainScene(this);
+    //scene->PlotM();
+    //pixmap = scene->addPixmap(QPixmap::fromImage(img));
+
+    view = new MainView(scene);
 
     line = new QLineEdit;
-    line->setText("5");
+    line->setText("0");
 
     ok = new QPushButton("Plot");
     ok->setDefault(true);
-    // ok->setEnabled(false);
+//    ok->setEnabled(false);
 
     close = new QPushButton("Close");
 
-    clear = new QPushButton("Clear");
+//    reset = new QPushButton("Reset");
 
-    //  create function input
-    funcLabel = new QLabel("Enter function");
-    funcLineEdit = new FuncEnterLineEdit;
-    funcLineEdit->setText("z^2+c");
-    funcLineEdit->parse_func();
-    QHBoxLayout* funcEnter = new QHBoxLayout;
-    funcEnter->addWidget(funcLabel);
-    funcEnter->addWidget(funcLineEdit);
-
-    scene = new MainScene(this);
-    scene->fparser = this->funcLineEdit;
-    QImage img = scene->PlotMandel();
-    scene->addPixmap(QPixmap::fromImage(img));
-
-    view = new QGraphicsView(scene);
-    view->setDragMode(QGraphicsView::ScrollHandDrag);
-    view->show();
+    palette_slider = new QSlider(Qt::Horizontal);
+    palette_slider->setMinimum(0);
+    palette_slider->setMaximum(50);
 
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(lbl);
     layout->addWidget(line);
 
-    QVBoxLayout* right = new QVBoxLayout;
-    right->addLayout(layout);
-    right->addLayout(funcEnter);
-    right->addWidget(ok);
-    right->addWidget(clear);
-    right->addWidget(close);
+    lbl_derivative = new QLabel("Enter derivative:");
+    layout_derivEnter = new QHBoxLayout;
+    layout_derivEnter->addWidget(lbl_derivative);
+    layout_derivEnter->addWidget(&(scene->derivativeEnter));
+
+    lbl_funcEnter = new QLabel("Enter function:");
+    QHBoxLayout* layout_funcEnter = new QHBoxLayout;
+    layout_funcEnter->addWidget(lbl_funcEnter);
+    layout_funcEnter->addWidget(&(scene->funcEnter));
+
+    right_layout = new QVBoxLayout;
+    right_layout->addLayout(layout);
+    right_layout->addLayout(layout_funcEnter);
+    right_layout->addWidget(ok);
+//    right->addWidget(reset);
+    right_layout->addWidget(close);
+    right_layout->addWidget(palette_slider);
 
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
     //mainLayout->addWidget(pic);
     mainLayout->addWidget(view);
-    mainLayout->addLayout(right);
+    mainLayout->addLayout(right_layout);
 
     main->setLayout(mainLayout);
     setCentralWidget(main);
@@ -58,27 +62,72 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(line, SIGNAL(textChanged(QString)), this, SLOT(TextChanged(QString)));
     connect(close, SIGNAL(clicked()), this, SLOT(close()));
     connect(ok, SIGNAL(clicked()), this, SLOT(OkClicked()));
-    connect(clear, SIGNAL(clicked()), this, SLOT(ClearClicked()));
+//    connect(reset, SIGNAL(clicked()), this, SLOT(resetClicked()));
+    connect(palette_slider, SIGNAL(valueChanged(int)), this, SLOT(sliderMoved(int)));
 }
 
 void MainWindow::TextChanged(QString str) {
-    ok->setEnabled(!str.isEmpty());
+//    ok->setEnabled(!str.isEmpty());
+    palette_slider->setValue(std::stoi(str.toStdString()));
 }
 
-void MainWindow::ClearClicked() {
-    QImage img(800, 800, QImage::Format_RGB32);
-    img.fill(qRgb(255,255,255));
-    scene->addPixmap(QPixmap::fromImage(img));
-}
+//void MainWindow::resetClicked() {
+//    scene->reset();
+//    view->render();
+//}
 
 void MainWindow::OkClicked() {
-    int num1 = line->text().toInt();
-    scene->x_coord = -2;
-    scene->y_coord = -2;
-    scene->width = 4;
-    scene->colormap = num1;
-    scene->fparser->parse_func();
-    QImage img = scene->PlotMandel(num1, scene->x_coord, scene->y_coord, scene->width);
-    scene->addPixmap(QPixmap::fromImage(img));
+    switch (scene->thread->fractal_type) {
+    case Fractals::Mandelbrot:
+        scene->funcEnter.parse_two_vars();
+        break;
+    case Fractals::JuliaSet:
+        scene->funcEnter.parse_one_var();
+        break;
+    }
+    scene->reset();
+    view->render();
+//    int num1 = line->text().toInt();
+//    scene->temp = num1;
+//    scene->updateColormap();
+//    scene->drawImage();
+}
+
+void MainWindow::sliderMoved(int val) {
+    //int num1 = palette_slider->value();
+    line->setText(std::to_string(val).c_str());
+    scene->temp = val;
+    scene->updateColormap();
+    //scene->drawImage();
+}
+
+void MainWindow::ChangeToMandelbrot() {
+    disconnect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    delete scene->thread;
+    scene->funcEnter.setText("z^2+c");
+    scene->thread = new Mandelbrot_Julia_Thread;
+    scene->thread->fractal_type = Fractals::Mandelbrot;
+    scene->thread->fparser = &scene->funcEnter;
+    connect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    ok->click();
+}
+
+void MainWindow::ChangeToJuliaSet() {
+    disconnect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    delete scene->thread;
+    scene->funcEnter.setText("z^2-0,4-0,59i");
+    scene->thread = new Mandelbrot_Julia_Thread;
+    scene->thread->fractal_type = Fractals::JuliaSet;
+    scene->thread->fparser = &scene->funcEnter;
+    connect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    ok->click();
+}
+
+void MainWindow::ChangeToNewton() {
+    right_layout->insertLayout(2, layout_derivEnter);  // TODO: implement
 }
 

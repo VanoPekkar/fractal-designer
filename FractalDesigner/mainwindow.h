@@ -1,8 +1,8 @@
 #ifndef MYWINDOW_H
 #define MYWINDOW_H
 
+#include "mainview.h"
 #include "mainscene.h"
-#include "funcenter.h"
 
 #include<QDialog>
 #include<QLabel>
@@ -16,7 +16,7 @@
 #include<QImage>
 #include<QPixmap>
 #include<QColor>
-
+#include <QSlider>
 #include <QGraphicsView>
 
 #include <complex>
@@ -32,22 +32,31 @@ public:
 private:
     QWidget* main;
     QLabel* lbl;
-    QLabel* pic;
+    QLabel* lbl_funcEnter;
+    QLabel* lbl_derivative;
     QLineEdit* line;
     QCheckBox* cb1;
     QCheckBox* cb2;
     QPushButton* ok;
     QPushButton* close;
-    QPushButton* clear;
-    QGraphicsView* view;
+    QPushButton* reset;
+    MainView* view;
     MainScene* scene;
-    QLabel* funcLabel;
-    FuncEnterLineEdit* funcLineEdit;
+    QSlider* palette_slider;
+    QHBoxLayout* layout_derivEnter;
+    QVBoxLayout* right_layout;
+
+
+    //void mousePressEvent(QMouseEvent * event);
 
 private slots:  // own slots
     void OkClicked();
     void TextChanged(QString str);
-    void ClearClicked();
+//    void resetClicked();
+    void sliderMoved(int val);
+    void ChangeToMandelbrot();
+    void ChangeToJuliaSet();
+    void ChangeToNewton();
 
 signals:  // own signals
     void UpperCase(QString str);

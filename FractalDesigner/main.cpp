@@ -1,6 +1,6 @@
 #include"mainwindow.h"
 
-#include <QApplication>
+#include<QApplication>
 #include <QtGui>
 #include <QMenu>
 #include <QMenuBar>
@@ -24,9 +24,17 @@ int main(int argc, char *argv[]) {
     pCheckableAction->setCheckable(true);
     pCheckableAction->setChecked(true);
 
-    QMenu* pmnuSubMenu = new QMenu("&SubMenu", pmnu);
-    pmnu->addMenu(pmnuSubMenu);
-    pmnuSubMenu->addAction("&Test");
+    QMenu* fractalMenu = new QMenu("Fractals", pmnu);
+    pmnu->addMenu(fractalMenu);
+    fractalMenu->addAction("Mandelbrot",
+                           window,
+                           SLOT(ChangeToMandelbrot()));
+    fractalMenu->addAction("Julia set",
+                           window,
+                           SLOT(ChangeToJuliaSet()));
+    fractalMenu->addAction("Newton",
+                           window,
+                           SLOT(ChangeToNewton()));
 
     QAction* pDisabledAction = pmnu->addAction("&DisabledItem");
     pDisabledAction->setEnabled(false);
@@ -38,7 +46,7 @@ int main(int argc, char *argv[]) {
     QMenu*   fileMenu   = new QMenu("&File");
     fileMenu->addAction("&Save",
                               &app,
-                              SLOT(aboutQt()), // not implemented
+                              SLOT(aboutQt()), // TODO: not implemented
                               Qt::CTRL + Qt::Key_S
                              );
 
