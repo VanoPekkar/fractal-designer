@@ -9,6 +9,7 @@ JuliaWindow::JuliaWindow(QWidget* parent,
     main = new QWidget;
 
     scene = new MainScene(this);
+    scene->thread->fractal_type = Fractals::JuliaSet;
     std::string formula = "z^2 + " + std::to_string(x_center) +
                           " + " + std::to_string(y_center) + "i";
     scene->funcEnter.setText(formula.c_str());
@@ -25,7 +26,7 @@ JuliaWindow::JuliaWindow(QWidget* parent,
     formula = "Julia set for " + std::to_string(x_center) + " " + std::to_string(y_center) + "i";
     setWindowTitle(formula.c_str());
     show();
-    setAttribute(Qt::WA_DeleteOnClose);  // calls destructor when x pressed
+    //setAttribute(Qt::WA_DeleteOnClose);  // calls destructor when x pressed
 }
 
 JuliaWindow::~JuliaWindow() {
@@ -69,6 +70,9 @@ void MainView::mousePressEvent(QMouseEvent *event)
         long double half_x = scene_ptr->visible_rect.width() / 2;
         long double y = scene_ptr->y_coord + ((event->y() - half_y) * scene_ptr->scale);
         long double x = scene_ptr->y_coord + ((event->x() - half_x) * scene_ptr->scale);
+        if (juliawindow) {
+            delete juliawindow;
+        }
         juliawindow = new JuliaWindow(this, x, y);
     }
     QGraphicsView::mousePressEvent(event);

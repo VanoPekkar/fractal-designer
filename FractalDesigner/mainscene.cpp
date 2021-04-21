@@ -92,6 +92,7 @@ MainScene::MainScene(QObject* parent,
     qRegisterMetaType<QVector<QVector<type>>>("QVector<QVector<type>>");
     //RenderThread::renderedImage()
     thread = new Mandelbrot_Julia_Thread;
+    thread->fractal_type = Fractals::Mandelbrot;
     thread->fparser = &funcEnter;
     connect(thread, &RenderThread::renderedImage,
             this, &MainScene::setValueMatrix);

@@ -31,10 +31,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     layout->addWidget(lbl);
     layout->addWidget(line);
 
-    lbl_derivative = new QLabel("Enter derivative:");
-    layout_derivEnter = new QHBoxLayout;
-    layout_derivEnter->addWidget(lbl_derivative);
-    layout_derivEnter->addWidget(&(scene->derivativeEnter));
+//    lbl_derivative = new QLabel("Enter derivative:");
+//    layout_derivEnter = new QHBoxLayout;
+//    layout_derivEnter->addWidget(lbl_derivative);
+//    layout_derivEnter->addWidget(&(scene->derivativeEnter));
 
     lbl_funcEnter = new QLabel("Enter function:");
     QHBoxLayout* layout_funcEnter = new QHBoxLayout;
@@ -84,6 +84,10 @@ void MainWindow::OkClicked() {
     case Fractals::JuliaSet:
         scene->funcEnter.parse_one_var();
         break;
+    case Fractals::Newton:
+        scene->funcEnter.parse_one_var();
+        scene->derivativeEnter->parse_one_var();
+        break;
     }
     scene->reset();
     view->render();
@@ -102,6 +106,13 @@ void MainWindow::sliderMoved(int val) {
 }
 
 void MainWindow::ChangeToMandelbrot() {
+    if (scene->thread->fractal_type == Fractals::Newton) {
+        // delete derivative enter for newton fractal
+        delete scene->derivativeEnter;
+        delete lbl_derivative;
+        right_layout->removeItem(layout_derivEnter);
+        delete layout_derivEnter;
+    }
     disconnect(scene->thread, &RenderThread::renderedImage,
             scene, &MainScene::setValueMatrix);
     delete scene->thread;
@@ -115,6 +126,13 @@ void MainWindow::ChangeToMandelbrot() {
 }
 
 void MainWindow::ChangeToJuliaSet() {
+    if (scene->thread->fractal_type == Fractals::Newton) {
+        // delete derivative enter for newton fractal
+        delete scene->derivativeEnter;
+        delete lbl_derivative;
+        right_layout->removeItem(layout_derivEnter);
+        delete layout_derivEnter;
+    }
     disconnect(scene->thread, &RenderThread::renderedImage,
             scene, &MainScene::setValueMatrix);
     delete scene->thread;
@@ -128,6 +146,25 @@ void MainWindow::ChangeToJuliaSet() {
 }
 
 void MainWindow::ChangeToNewton() {
-    right_layout->insertLayout(2, layout_derivEnter);  // TODO: implement
+    // create field for derivative
+    layout_derivEnter = new QHBoxLayout;
+    lbl_derivative = new QLabel("Enter derivative:");
+    layout_derivEnter->addWidget(lbl_derivative);
+    scene->derivativeEnter = new FuncEnterLineEdit;
+    layout_derivEnter->addWidget(scene->derivativeEnter);
+    right_layout->insertLayout(2, layout_derivEnter);
+
+    disconnect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    delete scene->thread;
+    scene->funcEnter.setText("z^3-1");
+    scene->derivativeEnter->setText("3*z^2");
+    scene->thread = new Newton_Thread;
+    scene->thread->fractal_type = Fractals::Newton;
+    scene->thread->fparser = &scene->funcEnter;
+    scene->thread->fparser_derivative = scene->derivativeEnter;
+    connect(scene->thread, &RenderThread::renderedImage,
+            scene, &MainScene::setValueMatrix);
+    ok->click();
 }
 

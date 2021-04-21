@@ -44,7 +44,7 @@ public:
     int temp;
     // Function enter line
     FuncEnterLineEdit funcEnter;
-    FuncEnterLineEdit derivativeEnter;
+    FuncEnterLineEdit* derivativeEnter;
     //GridItem testitem;
     GridItem* pixmap1;
     QImage image;

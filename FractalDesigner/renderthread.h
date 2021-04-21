@@ -18,10 +18,11 @@ QT_BEGIN_NAMESPACE
 class QImage;
 QT_END_NAMESPACE
 
-typedef float type;
+typedef double type;
 enum Fractals {
     Mandelbrot,
-    JuliaSet
+    JuliaSet,
+    Newton
 };
 
 class RenderThread : public QThread
@@ -53,6 +54,7 @@ protected:
 
 public:
     FuncEnterLineEdit* fparser;
+    FuncEnterLineEdit* fparser_derivative;
     Fractals fractal_type;
 
     enum { ColormapSize = 256 };
@@ -63,6 +65,16 @@ class Mandelbrot_Julia_Thread : public RenderThread {
 public:
     Mandelbrot_Julia_Thread(QWidget* parent = nullptr);
     ~Mandelbrot_Julia_Thread();
+
+protected:
+    void run() override;
+
+};
+
+class Newton_Thread : public RenderThread {
+public:
+    Newton_Thread(QWidget* parent = nullptr);
+    ~Newton_Thread();
 
 protected:
     void run() override;
