@@ -194,13 +194,13 @@ void Newton_Thread::run() {
         const int NumPasses = 3;
         int pass = 0;
 
+        // TODO: change to type (instead of double)?
         std::complex<double> params_for_parser[2];
         type prev_real, prev_imag;
-        double tolerance = 0.000001;
+        type tolerance = 0.000001;
 
         while (pass < NumPasses) {
             size_t MaxIterations = (1 << (2 * pass + 6)) + 32;
-            const int Limit = 4;
             bool allBlack = true;
 
             for (int y = 0; y < resultSize.height(); ++y) {

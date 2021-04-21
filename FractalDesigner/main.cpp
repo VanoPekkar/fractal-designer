@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
 
     QMenu* fractalMenu = new QMenu("Fractals", pmnu);
     pmnu->addMenu(fractalMenu);
+
+    // choices of fractals
     fractalMenu->addAction("Mandelbrot",
                            window,
                            SLOT(ChangeToMandelbrot()));

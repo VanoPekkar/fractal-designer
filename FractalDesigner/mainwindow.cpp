@@ -106,65 +106,75 @@ void MainWindow::sliderMoved(int val) {
 }
 
 void MainWindow::ChangeToMandelbrot() {
-    if (scene->thread->fractal_type == Fractals::Newton) {
-        // delete derivative enter for newton fractal
-        delete scene->derivativeEnter;
-        delete lbl_derivative;
-        right_layout->removeItem(layout_derivEnter);
-        delete layout_derivEnter;
+    if (scene->thread->fractal_type != Fractals::Mandelbrot) {
+        if (scene->thread->fractal_type == Fractals::Newton) {
+            // delete derivative enter for newton fractal
+            delete scene->derivativeEnter;
+            delete lbl_derivative;
+            right_layout->removeItem(layout_derivEnter);
+            delete layout_derivEnter;
+        }
+        disconnect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
+        delete scene->thread;
+        scene->funcEnter.setText("z^2+c");
+        scene->thread = new Mandelbrot_Julia_Thread;
+        scene->thread->fractal_type = Fractals::Mandelbrot;
+        scene->thread->fparser = &scene->funcEnter;
+        connect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
     }
-    disconnect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
-    delete scene->thread;
-    scene->funcEnter.setText("z^2+c");
-    scene->thread = new Mandelbrot_Julia_Thread;
-    scene->thread->fractal_type = Fractals::Mandelbrot;
-    scene->thread->fparser = &scene->funcEnter;
-    connect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
     ok->click();
 }
 
 void MainWindow::ChangeToJuliaSet() {
-    if (scene->thread->fractal_type == Fractals::Newton) {
-        // delete derivative enter for newton fractal
-        delete scene->derivativeEnter;
-        delete lbl_derivative;
-        right_layout->removeItem(layout_derivEnter);
-        delete layout_derivEnter;
+    if (scene->thread->fractal_type != Fractals::JuliaSet) {
+        if (scene->thread->fractal_type == Fractals::Newton) {
+            // delete derivative enter for newton fractal
+            delete scene->derivativeEnter;
+            delete lbl_derivative;
+            right_layout->removeItem(layout_derivEnter);
+            delete layout_derivEnter;
+        }
+        disconnect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
+        delete scene->thread;
+        scene->funcEnter.setText("z^2-0,4-0,59i");
+        scene->thread = new Mandelbrot_Julia_Thread;
+        scene->thread->fractal_type = Fractals::JuliaSet;
+        scene->thread->fparser = &scene->funcEnter;
+        connect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
     }
-    disconnect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
-    delete scene->thread;
-    scene->funcEnter.setText("z^2-0,4-0,59i");
-    scene->thread = new Mandelbrot_Julia_Thread;
-    scene->thread->fractal_type = Fractals::JuliaSet;
-    scene->thread->fparser = &scene->funcEnter;
-    connect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
     ok->click();
 }
 
 void MainWindow::ChangeToNewton() {
-    // create field for derivative
-    layout_derivEnter = new QHBoxLayout;
-    lbl_derivative = new QLabel("Enter derivative:");
-    layout_derivEnter->addWidget(lbl_derivative);
-    scene->derivativeEnter = new FuncEnterLineEdit;
-    layout_derivEnter->addWidget(scene->derivativeEnter);
-    right_layout->insertLayout(2, layout_derivEnter);
+    if (scene->thread->fractal_type != Fractals::Newton) {
+        // create field for derivative
+        layout_derivEnter = new QHBoxLayout;
+        lbl_derivative = new QLabel("Enter derivative:");
+        layout_derivEnter->addWidget(lbl_derivative);
+        scene->derivativeEnter = new FuncEnterLineEdit;
+        layout_derivEnter->addWidget(scene->derivativeEnter);
+        // TODO: problem with lack of space for
+        // field here (QImage::pixelColor: coordinate (...,...) out of range)
+        // possible solution: set min size of layout or widget or window
+        // mb do not allow user to resize window
+        right_layout->insertLayout(2, layout_derivEnter);
 
-    disconnect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
-    delete scene->thread;
-    scene->funcEnter.setText("z^3-1");
-    scene->derivativeEnter->setText("3*z^2");
-    scene->thread = new Newton_Thread;
-    scene->thread->fractal_type = Fractals::Newton;
-    scene->thread->fparser = &scene->funcEnter;
-    scene->thread->fparser_derivative = scene->derivativeEnter;
-    connect(scene->thread, &RenderThread::renderedImage,
-            scene, &MainScene::setValueMatrix);
+        disconnect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
+        delete scene->thread;
+        scene->funcEnter.setText("z^3-1");
+        scene->derivativeEnter->setText("3*z^2");
+        scene->thread = new Newton_Thread;
+        scene->thread->fractal_type = Fractals::Newton;
+        scene->thread->fparser = &scene->funcEnter;
+        scene->thread->fparser_derivative = scene->derivativeEnter;
+        connect(scene->thread, &RenderThread::renderedImage,
+                scene, &MainScene::setValueMatrix);
+    }
     ok->click();
 }
 
