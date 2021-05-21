@@ -929,7 +929,7 @@ void MainWindow::setPure() {
 }
 
 void MainWindow::OpenDocumentation() {
-    QDesktopServices::openUrl(QUrl("https://github.com/VanoPekkar/fractal-designer"));
+    QDesktopServices::openUrl(QUrl("https://github.com/VanoPekkar/fractal-designer/blob/main/Documentation.pdf"));
 }
 
 void MainWindow::SaveImage() {
