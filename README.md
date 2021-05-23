@@ -9,4 +9,4 @@ $ <downloaded file>
 ```
 ## Uninstall
 
-Open the folder, where you have installed the application and click at the FractalDesignerTool.exe(.run for Linux) and follow the instructions.
+Open the folder, where you have installed the application, click on the FractalDesignerTool (.exe for Windows) file and follow the instructions.
