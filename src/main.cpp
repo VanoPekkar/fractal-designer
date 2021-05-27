@@ -6,9 +6,12 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QScreen>
+#include <QStyleFactory>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    //qDebug() << QStyleFactory::keys();
+    app.setStyle(QStyleFactory::create("Fusion"));
 
     MainWindow* window = new MainWindow();
 
@@ -27,7 +30,8 @@ int main(int argc, char *argv[]) {
     iter_pure->setCheckable(true);
     it_group->addAction(iter_log);
     it_group->addAction(iter_pure);
-    iter_log->setChecked(true);
+    iter_pure->setChecked(true);
+    window->setPure();
 
 
     // choices of fractals

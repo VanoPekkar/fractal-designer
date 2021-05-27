@@ -53,7 +53,7 @@ IFSFunction::IFSFunction(QString name) : QGroupBox(name) {
     p1 = new QLineEdit;
     p2 = new QLineEdit;
     p1->setMaximumWidth(w * 3);
-    p2->setMaximumWidth(w * 3);
+    p2->setMaximumWidth(w * 6);
     p1l = new QLabel("Center:");
     p2l = new QLabel(", Radius:");
     il_layout->addWidget(p1l);

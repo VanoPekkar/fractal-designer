@@ -164,7 +164,7 @@ public:
 
     SaveWindow* save_window = nullptr;
 
-private slots:  // own slots
+public slots:  // own slots
     void OkClicked();
     void TextChanged(QString str);
     void paletteOffsetChanged(int val);

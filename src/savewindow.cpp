@@ -1,6 +1,9 @@
 #include "savewindow.h"
 #include "mainview.h"
 
+#include <QStyleFactory>
+#include <QFileDialog>
+
 SaveWindow::SaveWindow(QWidget* parent,
                        const MainScene* scene_ptr,
                        QMap<QChar, QString>* rules_map,
@@ -23,6 +26,7 @@ SaveWindow::SaveWindow(QWidget* parent,
     // note that copy constructor of main scene does not copy
     // thread and a few fields
 
+    //this->setStyle(QStyleFactory::create("windowsvista"));
     main = new QWidget;
     parentW->setEnabled(false);
 
@@ -84,9 +88,9 @@ SaveWindow::SaveWindow(QWidget* parent,
     connect(save_file_btn, SIGNAL(clicked()), this, SLOT(SaveClicked()));
     connect(file_chooser, SIGNAL(clicked()), this, SLOT(FileChooserClicked()));
 
-    connect(scene, SIGNAL(ImageReady()), this, SLOT(ImageCreated()));
     connect(scene, &MainScene::started, this, [=](int max){progress_bar->setMaximum(max);});
     connect(scene, &MainScene::nextLine, this, [=](int val){progress_bar->setValue(val);});
+    connect(scene, &MainScene::format, this, [=](QString f){progress_bar->setFormat(f);});
 
     this->show();
 }
@@ -96,10 +100,20 @@ SaveWindow::~SaveWindow() {
 }
 
 void SaveWindow::FileChooserClicked() {
-    filename = QFileDialog::getSaveFileName(this,
+    /*filename = "sas";QFileDialog::getSaveFileName(this,
                                             "Save File",
                                             "my_fractal.png",
-                                            "Images (*.png)");
+                                            "Images (*.png)");*/
+    //QFileDialog dialog;
+    //dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+    //qDebug() << QStyleFactory::keys();
+    //dialog.setStyle(QStyleFactory::create("windowsvista"));
+    //dialog.setStyleSheet(styleSheet());
+    //QFileDialog::getSaveFileName(this, "Save File", "my_fractal.png", "Images (*.png)");
+    filename = QFileDialog::getSaveFileName(this,
+                               "Save File",
+                               "my_fractal.png",
+                               "Images (*.png)", nullptr);
     filename_lbl->setText("Chosen file: " + filename);
 }
 
@@ -121,6 +135,7 @@ void SaveWindow::SaveClicked() {
     switch (main_scene->thread->fractal_type) {
     case Fractals::Mandelbrot:
         scene->thread = new Mandelbrot_Julia_Thread;
+        connect(scene->thread, SIGNAL(ImageReady()), this, SLOT(ImageCreated()));
         scene->thread->fractal_type = Fractals::Mandelbrot;
         scene->thread->fparser = &scene->funcEnter;
         scene->thread->fparser->parse_two_vars();
@@ -132,6 +147,7 @@ void SaveWindow::SaveClicked() {
         return;
     case Fractals::JuliaSet:
         scene->thread = new Mandelbrot_Julia_Thread;
+        connect(scene->thread, SIGNAL(ImageReady()), this, SLOT(ImageCreated()));
         scene->thread->fractal_type = Fractals::JuliaSet;
         scene->thread->fparser = &scene->funcEnter;
         scene->thread->fparser->parse_one_var();
@@ -143,6 +159,7 @@ void SaveWindow::SaveClicked() {
         break;
     case Fractals::Newton:
         scene->thread = new Newton_Thread;
+        connect(scene->thread, SIGNAL(ImageReady()), this, SLOT(ImageCreated()));
         scene->thread->fractal_type = Fractals::Newton;
         scene->thread->fparser = &scene->funcEnter;
         scene->thread->fparser_derivative = scene->derivativeEnter;
@@ -165,6 +182,7 @@ void SaveWindow::SaveClicked() {
         break;
     case Fractals::Secant:
         scene->thread = new Newton_Thread;
+        connect(scene->thread, SIGNAL(ImageReady()), this, SLOT(ImageCreated()));
         scene->thread->fractal_type = Fractals::Secant;
         scene->thread->fparser = &scene->funcEnter;
 

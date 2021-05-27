@@ -1,10 +1,12 @@
 #include "mainview.h"
+#include <QStyleFactory>
 
 JuliaWindow::JuliaWindow(QWidget* parent,
                          long double x_center, long double y_center,
                          JuliaWindow** ptr,
                          MainScene* scene_ptr) : QMainWindow(parent) {
     this->resize(500, 500);
+    this->setStyle(QStyleFactory::create("Fusion"));
 
     self_ptr = ptr;
 
@@ -113,7 +115,7 @@ void MainView::mouseReleaseEvent(QMouseEvent *event) {
 
         scene_ptr->x_coord -= pixmapOffset.x() * scene_ptr->scale;
         scene_ptr->y_coord -= pixmapOffset.y() * scene_ptr->scale;
-        scene_ptr->last_offset = pixmapOffset;
+        scene_ptr->last_offset += pixmapOffset;
         pixmapOffset = QPoint();
         render_extra();
     }
@@ -132,7 +134,7 @@ void MainView::wheelEvent(QWheelEvent * event) {
         QGraphicsView::wheelEvent(event);
         return;
     }
-
+    scene_ptr->empty = true;
     scene_ptr->visible_rect = QRectF(mapToScene(0,0), mapToScene(width(), height()));
     QRectF source = scene_ptr->visible_rect;
     QRectF target(0, 0, source.width(), source.height());
@@ -184,12 +186,13 @@ void MainView::wheelEvent(QWheelEvent * event) {
 void MainView::render() {
     scene_ptr->visible_rect = QRectF(mapToScene(0,0), mapToScene(width(), height()));
     QSize visible_size(scene_ptr->visible_rect.width(), scene_ptr->visible_rect.height());
-    QImage tempMask = bitMask;
-    if (bitMask.size() != visible_size) {
-        tempMask = QImage(visible_size, QImage::Format_MonoLSB);
-        tempMask.fill(1);
+    //QImage tempMask = bitMask;
+    if (bitMask.size() != visible_size || scene_ptr->empty) {
+        //qDebug() << "here";
+        bitMask = QImage(visible_size, QImage::Format_MonoLSB);
+        bitMask.fill(1);
     }
-    scene_ptr->thread->render(scene_ptr->x_coord, scene_ptr->y_coord, scene_ptr->scale, visible_size, tempMask ,1);
+    scene_ptr->thread->render(scene_ptr->x_coord, scene_ptr->y_coord, scene_ptr->scale, visible_size, bitMask ,1);
 }
 
 bool MainView::eventFilter(QObject *obj, QEvent *event) {
@@ -242,6 +245,7 @@ void MainView::render_extra() {
         scene_ptr->render(&painter, target, source);
         painter.end();
         bitMask = image.createAlphaMask();
+        //qDebug() << bitMask.pixelColor(0, 0);
         render();
         bitMask.fill(0);
     }

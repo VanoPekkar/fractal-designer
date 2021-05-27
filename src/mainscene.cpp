@@ -18,7 +18,7 @@ MainScene::MainScene(QObject* parent,
     palette_length = 1;
     palette_offset = 0;
     current_colormap = 0;
-    method = 0;
+    method = 1;
     colormaps = {{
                      {qRgb(0, 0, 255), qRgb(0, 255, 255), qRgb(0, 255, 0), qRgb(255, 255, 0), qRgb(255, 0, 0), qRgb(255, 0, 255), qRgb(0, 0, 255)},
                      {0, 0.125, 0.175, 0.35, 0.515, 0.85, 1},
@@ -92,7 +92,12 @@ void MainScene::keyPressEvent(QKeyEvent * event) {
 }
 
 void MainScene::setValueMatrix(const QVector<QVector<type>>& res) {
+    if (empty) {
+        clear();
+    }
+    empty = false;
     int di = -last_offset.y(), dj = -last_offset.x();
+    last_offset = {0, 0};
     int h = res.size(), w = res[0].size();
     if (values.size() == 0) { // || h != values.last().size() || w != values.last()[0].size()) {
         values = {res};
@@ -133,7 +138,6 @@ void MainScene::setValueMatrix(const QVector<QVector<type>>& res) {
     }
     values.push_back(values_new);
     offsets.push_back({di, dj});
-    last_offset = {0, 0};
     drawImage();
 }
 
@@ -208,7 +212,6 @@ void MainScene::createImage() {
 
 void MainScene::drawImage() {
     createImage();
-    emit ImageReady();
     pixmap1 = new GridItem(QPixmap::fromImage(image), nullptr, visible_rect.x(), visible_rect.y());
     addItem(pixmap1);
 }

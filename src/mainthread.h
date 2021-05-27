@@ -46,6 +46,7 @@ signals:
     void started(int max);
     void nextLine(int val);
     void format(QString f);
+    void ImageReady();
 
 public:
     static uint rgbFromWaveLength(double wave);

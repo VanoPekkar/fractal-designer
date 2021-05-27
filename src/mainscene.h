@@ -89,14 +89,14 @@ public:
     uint set_color;
     uint color(double mu);
     void connectAll();
-    int method = 0;
+    int method;
+    bool empty = true;
     void drawLSys(QMap<QChar, QString> rules, QString axiom, QMap<QChar, QString> actions, double ang, int it);
     void drawIFS(QVector<QVector<double>>  functions, int it, QPointF start);
 signals:
     void started(int max);
     void nextLine(int val);
     void format(QString f);
-    void ImageReady();
 
 public slots:
     void keyPressEvent(QKeyEvent * event) override;

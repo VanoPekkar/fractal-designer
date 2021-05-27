@@ -39,8 +39,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     palette_offset_slider->setSliderPosition(start_offset);
 
     palette_length_slider = new QSlider(Qt::Vertical);
-    palette_length_slider->setMinimum(-20000);
-    palette_length_slider->setMaximum(45000);
+    palette_length_slider->setMinimum(0);
+    palette_length_slider->setMaximum(100000);
     start_length = 25000;
     scene->palette_length = paletteLen(start_length);
     palette_length_slider->setSliderPosition(start_length);
@@ -769,8 +769,8 @@ void MainWindow::ChangeToJuliaSet() {
         scene->thread->fractal_type = Fractals::JuliaSet;
         scene->thread->fparser = &scene->funcEnter;
         scene->connectAll();
-        palette_length_slider->setSliderPosition(start_length);
-        paletteLengthChanged(start_length);
+        palette_length_slider->setSliderPosition(start_length * 2);
+        paletteLengthChanged(start_length * 2);
     }
     right_layout->setStretchFactor(sliders_and_names, 100);
     main_layout->setStretch(1, 6);
@@ -920,10 +920,14 @@ void MainWindow::ChangeToLSys() {
 }
 
 void MainWindow::setLog() {
+    palette_length_slider->setMinimum(-20000);
+    palette_length_slider->setMaximum(45000);
     scene->method = 0;
     scene->updateImage();
 }
 void MainWindow::setPure() {
+    palette_length_slider->setMinimum(0);
+    palette_length_slider->setMaximum(100000);
     scene->method = 1;
     scene->updateImage();
 }

@@ -148,6 +148,7 @@ void Mandelbrot_Julia_Thread::run() {
 
             if (allBlack && pass == 0) {
                 pass = 2;
+                //qDebug() << "lol";
             } else {
                 if (!restart) {
                     emit renderedImage(res);
@@ -155,6 +156,7 @@ void Mandelbrot_Julia_Thread::run() {
                 ++pass;
             }
         }
+        emit ImageReady();
         mutex.lock();
         if (!restart)
             condition.wait(&mutex);
