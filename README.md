@@ -17,3 +17,4 @@ $ ./FractalDesigner_v0.1_amd64.run
 ## Uninstall
 
 Open the folder where you have installed the application, click on the FractalDesignerTool (.exe for Windows) file and follow the instructions.
+**Note** that the whole folder will be removed!
