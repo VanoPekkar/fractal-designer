@@ -63,6 +63,8 @@ MainView::MainView(MainScene* scene, QWidget* parent) : QGraphicsView(scene, par
     show();
     QSize visibleSize(scene_ptr->visible_rect.width(), scene_ptr->visible_rect.height());
     bitMask = QImage(visibleSize, QImage::Format_MonoLSB);
+    bitMask.setColor(0, 0);
+    bitMask.setColor(1, 1);
     bitMask.fill(1);
     setSceneRect({-100000, -100000, 200000, 200000});
 }
@@ -179,6 +181,8 @@ void MainView::wheelEvent(QWheelEvent * event) {
     scene_ptr->visible_rect = QRectF(mapToScene(0,0), mapToScene(width(), height()));
     QSize visibleSize(scene_ptr->visible_rect.width(), scene_ptr->visible_rect.height());
     bitMask = QImage(visibleSize, QImage::Format_MonoLSB);
+    bitMask.setColor(0, 0);
+    bitMask.setColor(1, 1);
     bitMask.fill(1);
     render();
 }
@@ -190,6 +194,8 @@ void MainView::render() {
     if (bitMask.size() != visible_size || scene_ptr->empty) {
         //qDebug() << "here";
         bitMask = QImage(visible_size, QImage::Format_MonoLSB);
+        bitMask.setColor(0, 0);
+        bitMask.setColor(1, 1);
         bitMask.fill(1);
     }
     scene_ptr->thread->render(scene_ptr->x_coord, scene_ptr->y_coord, scene_ptr->scale, visible_size, bitMask ,1);
@@ -245,8 +251,10 @@ void MainView::render_extra() {
         scene_ptr->render(&painter, target, source);
         painter.end();
         bitMask = image.createAlphaMask();
-        //qDebug() << bitMask.pixelColor(0, 0);
+        //qDebug() << "al" << bitMask.pixel(0, 0);
         render();
+        bitMask.setColor(0, 0);
+        bitMask.setColor(1, 1);
         bitMask.fill(0);
     }
 }
@@ -257,6 +265,8 @@ void MainView::init() {
     scene_ptr->visible_rect = QRectF(mapToScene(0,0), mapToScene(width(), height()));
     QSize visibleSize(scene_ptr->visible_rect.width(), scene_ptr->visible_rect.height());
     bitMask = QImage(visibleSize, QImage::Format_MonoLSB);
+    bitMask.setColor(0, 0);
+    bitMask.setColor(1, 1);
     bitMask.fill(1);
 }
 

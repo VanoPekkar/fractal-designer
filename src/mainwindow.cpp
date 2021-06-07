@@ -639,6 +639,9 @@ void MainWindow::OkClicked() {
         return;
     }
     scene->reset();
+    view->bitMask.setColor(0, 0);
+    view->bitMask.setColor(1, 1);
+    view->bitMask.fill(1);
     view->render();
 }
 
